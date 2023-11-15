@@ -2,15 +2,21 @@ package com.example.mcproject
 
 // Inside JournalActivity.kt
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class JournalActivity : AppCompatActivity() {
 
     private lateinit var searchView: SearchView
+    private lateinit var db: FirebaseFirestore
+    private lateinit var adapter: JournalAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +24,10 @@ class JournalActivity : AppCompatActivity() {
 
         searchView = findViewById(R.id.searchView)
         setUpSearchView()
+
+        db = FirebaseFirestore.getInstance()
+        adapter = JournalAdapter(mutableListOf())
+
     }
 
     private fun setUpSearchView() {
@@ -34,11 +44,32 @@ class JournalActivity : AppCompatActivity() {
         })
     }
 
-    private fun performSearch(query: String?) {
-        // Implement your search logic here
-        // You may want to filter your entries based on the query
-        // Update your UI accordingly
+    fun performSearch(query: String?) {
+//        if (query != null) {
+//            db.collection("journals")
+//                .whereArrayContains("tags", query)
+//                .get()
+//                .addOnSuccessListener { documents ->
+//                    val journalList = ArrayList<Journal>()
+//                    for (document in documents) {
+//                        val journal = document.toObject(Journal::class.java)
+//                        journalList.add(journal)
+//                    }
+//                    // Update your RecyclerView adapter with the filtered list
+//                    adapter.updateList(journalList)
+//                }
+//                .addOnFailureListener { exception ->
+//                    Log.w(TAG, "Error getting documents: ", exception)
+//                }
+//        }
 
+        val dummyJournalList = mutableListOf(
+            Journal("Title 1", "Content 1", listOf("tag1", "tag2")),
+            Journal("Title 2", "Content 2", listOf("tag2", "tag3")),
+            // Add more dummy entries as needed
+        )
+
+        adapter.updateList(dummyJournalList)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
