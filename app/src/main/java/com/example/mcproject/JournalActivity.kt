@@ -7,8 +7,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -17,6 +20,7 @@ class JournalActivity : AppCompatActivity() {
     private lateinit var searchView: SearchView
     private lateinit var db: FirebaseFirestore
     private lateinit var adapter: JournalAdapter
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +29,12 @@ class JournalActivity : AppCompatActivity() {
         searchView = findViewById(R.id.searchView)
         setUpSearchView()
 
-        db = FirebaseFirestore.getInstance()
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = JournalAdapter(mutableListOf())
+        recyclerView.adapter = adapter
 
+        //db = FirebaseFirestore.getInstance()
     }
 
     private fun setUpSearchView() {
@@ -38,7 +45,13 @@ class JournalActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                performSearch(newText)
+                if (newText.isNullOrBlank()) {
+                    recyclerView.visibility = View.GONE
+                } else {
+                    recyclerView.visibility = View.VISIBLE
+                    performSearch(newText)
+                }
+
                 return true
             }
         })
