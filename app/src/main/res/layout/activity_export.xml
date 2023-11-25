@@ -15,7 +15,7 @@
         <EditText
             android:id="@+id/input_text"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
+            android:layout_height="500dp"
             android:hint="Enter your text"
             android:padding="10dp" />
 
@@ -24,6 +24,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="EXPORT"/>
+
+        <Button
+            android:id="@+id/pick_photo_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pick Photo"/>
 
     </LinearLayout>
 

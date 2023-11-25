@@ -13,11 +13,14 @@ import android.text.TextPaint
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.text.Paragraph
 import androidx.compose.ui.text.font.Font
 import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileOutputStream
 import java.util.jar.Manifest
@@ -35,6 +38,15 @@ class ExportActivity : AppCompatActivity() {
         val inputText = findViewById<EditText>(R.id.input_text)
 
         val exportButton = findViewById<Button>(R.id.export_button)
+        val photoPickerButton = findViewById<Button>(R.id.pick_photo_button)
+
+        val pickedPhoto = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+            } else {
+                Log.d("PhotoPicker", "No Media Selected")
+            }
+        }
 
         // https://dayoneapp.com/blog/journaling-examples/#5-daily-reflections-journal
         inputText.setText("Date: April 27, 2022\n" +
@@ -52,6 +64,10 @@ class ExportActivity : AppCompatActivity() {
         exportButton.setOnClickListener {
             val content = inputText.text.toString()
             createPDF(content)
+        }
+
+        photoPickerButton.setOnClickListener {
+            pickedPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
     }
@@ -89,10 +105,28 @@ class ExportActivity : AppCompatActivity() {
         try {
             pdfDocument.writeTo(FileOutputStream(file))
         } catch (e: Exception) {
-            Log.e("d", "Error creatinf ile" + e.toString())
+            Log.e("d", "Error creating ile" + e.toString())
         }
 
         pdfDocument.close()
+
+        launchPDF(file)
+    }
+
+    fun launchPDF(file: File) {
+        val pdfUrl = FileProvider.getUriForFile(this, "${packageName}.provider", file)
+
+        val intent = Intent(Intent.ACTION_VIEW)
+
+        intent.setDataAndType(pdfUrl, "application/pdf")
+
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.e("ee", e.toString())
+        }
     }
 
     fun requestPermissions() {
