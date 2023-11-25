@@ -1,4 +1,5 @@
 <resources>
+<<<<<<< HEAD
     <string name="app_name">MC Project</string>
     <string name="email_mandatory">Email is mandatory!</string>
     <string name="password_mandatory">Password is mandatory!</string>
@@ -8,4 +9,7 @@
     <string name="sign_in">Sign In</string>
     <string name="not_registered">Not Registered Yet , Sign Up !</string>
 
+=======
+    <string name="app_name">Journal Box</string>
+>>>>>>> 3bd0c546a27f40cdd098165f58d9b82657b473fd
 </resources>
