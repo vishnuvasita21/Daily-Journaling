@@ -5,23 +5,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".JournalActivity">
 
     <!-- Add a SearchView -->
     <SearchView
         android:id="@+id/searchView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:queryHint="Search for tags..."
-        android:iconifiedByDefault="false" />
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/buttonAddTag"
+        android:queryHint="@string/search_hint" />
 
-    <!-- Other UI components go here -->
+    <!-- Add an ImageButton for adding a new tag -->
+    <ImageButton
+        android:id="@+id/buttonAddTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/add"
+        android:contentDescription="@string/add_tag"
+        android:background="?attr/selectableItemBackgroundBorderless" />
 
+    <!-- RecyclerView for displaying the list of journals -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/searchView"
-        android:visibility="gone" />
+        android:layout_below="@id/searchView"
+        android:visibility="visible" /> <!-- Changed from 'gone' to 'visible' -->
 
 </RelativeLayout>

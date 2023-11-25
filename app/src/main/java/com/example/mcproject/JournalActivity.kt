@@ -1,103 +1,78 @@
-package com.example.mcproject
+package com.example.mcproject // Replace with your actual package name
 
-// Inside JournalActivity.kt
-
-import android.content.ContentValues.TAG
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.widget.ImageButton
 import android.widget.SearchView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FirebaseFirestore
-
+import com.example.mcproject.Feature_Tag.AddTagDialogFragment
 
 class JournalActivity : AppCompatActivity() {
 
-    private lateinit var searchView: SearchView
-    private lateinit var db: FirebaseFirestore
     private lateinit var adapter: JournalAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var buttonAddTag: ImageButton
+    private lateinit var searchView: SearchView
+
+    // Activity Result API callback
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val updatedTag = result.data?.getStringExtra(TagDetailActivity.EXTRA_UPDATED_TAG)
+            val deletedTag = result.data?.getStringExtra(TagDetailActivity.EXTRA_DELETED_TAG)
+
+            updatedTag?.let {
+                adapter.updateTag(it)
+            }
+
+            deletedTag?.let {
+                adapter.removeTag(it)
+            }
+
+            adapter.notifyDataSetChanged()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journal)
 
+        recyclerView = findViewById(R.id.recyclerView)
         searchView = findViewById(R.id.searchView)
-        setUpSearchView()
+        buttonAddTag = findViewById(R.id.buttonAddTag)
 
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = JournalAdapter(mutableListOf())
+        adapter = JournalAdapter(mutableListOf()) { tagName ->
+            val intent = Intent(this, TagDetailActivity::class.java).apply {
+                putExtra(TagDetailActivity.EXTRA_TAG, tagName)
+            }
+            startForResult.launch(intent)
+        }
+
         recyclerView.adapter = adapter
 
-        //db = FirebaseFirestore.getInstance()
-    }
+        buttonAddTag.setOnClickListener {
+            AddTagDialogFragment().apply {
+                onTagCreated = { tagName ->
+                    adapter.addTag(tagName)
+                    adapter.notifyDataSetChanged()
+                }
+            }.show(supportFragmentManager, "AddTagDialog")
+        }
 
-    private fun setUpSearchView() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                performSearch(query)
+                adapter.filter(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText.isNullOrBlank()) {
-                    recyclerView.visibility = View.GONE
-                } else {
-                    recyclerView.visibility = View.VISIBLE
-                    performSearch(newText)
-                }
-
+                adapter.filter(newText)
                 return true
             }
         })
-    }
-
-    fun performSearch(query: String?) {
-//        if (query != null) {
-//            db.collection("journals")
-//                .whereArrayContains("tags", query)
-//                .get()
-//                .addOnSuccessListener { documents ->
-//                    val journalList = ArrayList<Journal>()
-//                    for (document in documents) {
-//                        val journal = document.toObject(Journal::class.java)
-//                        journalList.add(journal)
-//                    }
-//                    // Update your RecyclerView adapter with the filtered list
-//                    adapter.updateList(journalList)
-//                }
-//                .addOnFailureListener { exception ->
-//                    Log.w(TAG, "Error getting documents: ", exception)
-//                }
-//        }
-
-        val dummyJournalList = mutableListOf(
-            Journal("Title 1", "Content 1", listOf("tag1", "tag2")),
-            Journal("Title 2", "Content 2", listOf("tag2", "tag3")),
-            // Add more dummy entries as needed
-        )
-
-        adapter.updateList(dummyJournalList)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_settings -> {
-                // Handle Settings item click
-                return true
-            }
-            // Add other menu item cases as needed
-            else -> return super.onOptionsItemSelected(item)
-        }
     }
 }
