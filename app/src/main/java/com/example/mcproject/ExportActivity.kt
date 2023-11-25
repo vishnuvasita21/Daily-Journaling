@@ -63,54 +63,13 @@ class ExportActivity : AppCompatActivity() {
 
         exportButton.setOnClickListener {
             val content = inputText.text.toString()
-            createPDF(content)
+//            createPDF(content)
         }
 
         photoPickerButton.setOnClickListener {
             pickedPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-    }
-
-    fun createPDF(content: String) {
-        // creating a document
-        val pdfDocument = PdfDocument()
-
-        // creating page for document
-        val pageInfo = PageInfo.Builder(1080, 1920, 1).create()
-
-        val startPage = pdfDocument.startPage(pageInfo)
-
-        val canvas = startPage.canvas
-
-//        val paint: android.graphics.Paint = android.graphics.Paint()
-//        paint.textSize = 15F
-        val textPaint = TextPaint()
-        textPaint.textSize = 35F
-
-        // https://medium.com/over-engineering/drawing-multiline-text-to-canvas-on-android-9b98f0bfa16a
-        val staticLayout = StaticLayout.Builder
-            .obtain(content,0 , content.length, textPaint, 900)
-            .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-            .setLineSpacing(10f, 0.5f)
-            .setIndents(intArrayOf(40), intArrayOf(40))
-            .build()
-
-//        canvas.drawText(content, 10F, 10F, paint)
-        staticLayout.draw(canvas)
-        pdfDocument.finishPage(startPage)
-
-        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Test.pdf")
-
-        try {
-            pdfDocument.writeTo(FileOutputStream(file))
-        } catch (e: Exception) {
-            Log.e("d", "Error creating ile" + e.toString())
-        }
-
-        pdfDocument.close()
-
-        launchPDF(file)
     }
 
     fun launchPDF(file: File) {

@@ -4,6 +4,7 @@ package com.example.mcproject
 
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -11,8 +12,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.File
 
 
 class JournalActivity : AppCompatActivity() {
@@ -21,6 +26,7 @@ class JournalActivity : AppCompatActivity() {
     private lateinit var adapter: JournalAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var exportViewModel: ExportViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +47,8 @@ class JournalActivity : AppCompatActivity() {
         
         insertJournal(Journal("Title 1", "Content 1", listOf("tag1", "tag2")))
         insertJournal(Journal("Title 2", "Content 2", listOf("tag2", "tag3")))
+
+        exportViewModel = ViewModelProvider(this, ExportViewModelFactory())[ExportViewModel::class.java]
     }
 
     private fun setUpSearchView() {
@@ -117,8 +125,34 @@ class JournalActivity : AppCompatActivity() {
                 // Handle Settings item click
                 return true
             }
+            R.id.export_as_pdf -> {
+                val journalContent = "\n" +
+                        "\"Before bed, I took some time to reflect on the day. I thought about the things that went well and the areas where I could improve. I also wrote down some goals for tomorrow, including getting up a little bit earlier and taking a few moments to meditate before starting my day.\\n\" +\n" +
+                        "\"\\n\" +\n" +
+                        "\"Overall, today was a good day. I feel grateful for the opportunities and experiences that came my way, and I’m looking forward to what tomorrow will bring."
+                val journal = Journal("Title 1", journalContent, listOf("tag1", "tag2"))
+                val pdfFile = exportViewModel.createPDF(journal)
+                launchPDF(pdfFile)
+                return true
+            }
             // Add other menu item cases as needed
             else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun launchPDF(file: File) {
+        val pdfUrl = FileProvider.getUriForFile(this, "${packageName}.provider", file)
+
+        val intent = Intent(Intent.ACTION_VIEW)
+
+        intent.setDataAndType(pdfUrl, "application/pdf")
+
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.e("ee", e.toString())
         }
     }
 }
