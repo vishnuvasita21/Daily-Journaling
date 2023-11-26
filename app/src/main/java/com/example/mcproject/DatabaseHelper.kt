@@ -13,6 +13,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COLUMN_TITLE = "title"
         const val COLUMN_CONTENT = "content"
         const val COLUMN_TAGS = "tags"
+        const val COLUMN_IMAGE_URL = "imageUrl"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -20,7 +21,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_TITLE + " TEXT,"
                 + COLUMN_CONTENT + " TEXT,"
-                + COLUMN_TAGS + " TEXT" + ")")
+                + COLUMN_TAGS + " TEXT,"
+                + COLUMN_IMAGE_URL + " TEXT" + ")")
         db.execSQL(CREATE_TABLE)
     }
 
