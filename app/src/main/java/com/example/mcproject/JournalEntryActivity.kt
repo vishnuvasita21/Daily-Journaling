@@ -102,6 +102,9 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             }
             insertJournal(Journal(titleContent, mainContent, imageUrl, listOf("tag1", "tag2"), formattedDate, this.location))
             Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
+
+            titleText.text.clear()
+            entryEditText.text.clear()
         }
 
         entryEditText.addTextChangedListener(object : TextWatcher {

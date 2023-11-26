@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/journal_signup">
+    android:background="@drawable/test5"
+    android:orientation="vertical"
+    tools:context=".JournalEntryActivity"
+    android:layout_marginBottom="25dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -55,9 +59,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:fontFamily="sans-serif-black"
-                android:text="TITLE :"
+                android:text="Title :"
                 android:textAlignment="center"
-                android:textAllCaps="true"
+                android:textAllCaps="false"
                 android:textSize="20sp" />
 
             <EditText

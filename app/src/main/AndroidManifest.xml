@@ -36,11 +36,8 @@
 <!--            android:name=".ViewJournal"-->
 <!--            android:exported="false" />-->
         <activity
-            android:name=".ViewJournal"
-            android:exported="false" />
-        <activity
-            android:name=".JournalEntryActivity"
-            android:exported="true">
+            android:name=".Homepage"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,19 +45,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".JournalEntryActivity"
+            android:exported="false" />
+        <activity
             android:name=".SignUpActivity"
-            android:exported="true">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
+        <activity
+            android:name=".ViewJournal"
+            android:exported="false"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

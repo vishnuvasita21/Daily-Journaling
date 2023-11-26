@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/rounded_corner">
 
     <!-- Add a SearchView -->
     <SearchView
