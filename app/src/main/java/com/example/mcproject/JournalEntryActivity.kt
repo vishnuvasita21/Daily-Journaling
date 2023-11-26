@@ -54,6 +54,9 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
             insertJournal(Journal(titleContent, mainContent, listOf("tag1", "tag2"), formattedDate))
             Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
+
+            titleText.text.clear()
+            entryEditText.text.clear()
         }
 
         entryEditText.addTextChangedListener(object : TextWatcher {

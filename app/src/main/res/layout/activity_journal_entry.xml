@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/journal_signup"
+    android:background="@drawable/test5"
     android:orientation="vertical"
     tools:context=".JournalEntryActivity"
     android:layout_marginBottom="25dp">
@@ -50,9 +50,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:fontFamily="sans-serif-black"
-            android:text="TITLE :"
+            android:text="Title :"
             android:textAlignment="center"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:textSize="20sp" />
 
         <EditText
@@ -91,15 +91,18 @@
         android:textStyle="bold"
         android:layout_gravity="end" />
 
-    <Button
+    <!-- Your existing layout file -->
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rememberButton"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:background="#F85555"
+        android:background="@color/beige"
         android:text="Remember"
-        app:cornerRadius="10dp" />
+        app:cornerRadius="10dp"
+        app:iconTint="#FFF6F6" />
+
 
 </LinearLayout>
