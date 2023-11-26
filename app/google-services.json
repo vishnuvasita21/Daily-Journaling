@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "758716297854",
-    "project_id": "mcnotes-dabf0",
-    "storage_bucket": "mcnotes-dabf0.appspot.com"
+    "project_number": "173403018316",
+    "project_id": "mc-project-5989c",
+    "storage_bucket": "mc-project-5989c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:758716297854:android:2aceb6cf0821765f861e2f",
+        "mobilesdk_app_id": "1:173403018316:android:4ada33e2796640be9310e9",
         "android_client_info": {
           "package_name": "com.example.mcproject"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCupQ-LFPQxnhhIP46C1wJw59choqhAQUQ"
+          "current_key": "AIzaSyAo07qkyN0f5obkPIrpPCeWq23PI-806Z4"
         }
       ],
       "services": {

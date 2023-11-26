@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Journal Box</string>
+    <string name="app_name">MC Project</string>
+    <string name="email_mandatory">Email is mandatory!</string>
+    <string name="password_mandatory">Password is mandatory!</string>
+    <string name="renter_password">Please re-enter the password!</string>
+    <string name="already_registered">Already Registered , Sign In !</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="not_registered">Not Registered Yet , Sign Up !</string>
 </resources>

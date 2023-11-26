@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mcproject"
-        minSdk = 34
-        targetSdk = 34
+        minSdk = 31
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
 
@@ -39,6 +39,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -47,6 +48,9 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    buildFeatures{
+        viewBinding = true
     }
 }
 
@@ -64,6 +68,7 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.firebase:firebase-firestore:23.0.3")
+    implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-database:20.0.3")
     implementation("com.google.firebase:firebase-analytics")

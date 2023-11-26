@@ -6,7 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class JournalAdapter(var journalList: MutableList<Journal>) : RecyclerView.Adapter<JournalAdapter.ViewHolder>() {
+interface OnItemClickListener {
+    fun onItemClick(journal: Journal)
+}
+
+class JournalAdapter(var journalList: MutableList<Journal>, private val clickListener: OnItemClickListener) :
+    RecyclerView.Adapter<JournalAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
@@ -22,6 +27,10 @@ class JournalAdapter(var journalList: MutableList<Journal>) : RecyclerView.Adapt
         val journal = journalList[position]
         holder.titleTextView.text = journal.title
         holder.contentTextView.text = journal.content
+
+        holder.itemView.setOnClickListener {
+            clickListener.onItemClick(journal)
+        }
     }
 
     override fun getItemCount(): Int {
