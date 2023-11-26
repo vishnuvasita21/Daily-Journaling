@@ -24,18 +24,14 @@ class LoginActivity : AppCompatActivity() {
         binding.signinButton.setOnClickListener {
             val email = binding.emailEt.text.toString()
             val password = binding.passET.text.toString()
-            println("Reached here:1")
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                println("Reached here:2")
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
-                            println("Loggedin successfully")
                             Toast.makeText(this,"Logged in successfully!",Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, MainActivity::class.java)
+                            val intent = Intent(this, JournalEntryActivity::class.java)
                             startActivity(intent)
                         } else {
-                            println("Reached here:3")
                             Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT)
                                 .show()
                         }
@@ -43,7 +39,6 @@ class LoginActivity : AppCompatActivity() {
 
 
             } else {
-                println("Reached here:4")
                 Toast.makeText(this, "Please enter all the mandatory fields", Toast.LENGTH_SHORT)
                     .show()
             }

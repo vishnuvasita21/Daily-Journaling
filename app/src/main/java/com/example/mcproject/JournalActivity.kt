@@ -3,9 +3,7 @@ package com.example.mcproject
 // Inside JournalActivity.kt
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -33,14 +31,14 @@ class JournalActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = JournalAdapter(mutableListOf())
         recyclerView.adapter = adapter
-        dbHelper = DatabaseHelper(this)
+            dbHelper = DatabaseHelper(this)
 
-        val db = dbHelper.writableDatabase
-        db.delete(DatabaseHelper.TABLE_NAME, null, null)
-        db.close()
-        
-        insertJournal(Journal("Title 1", "Content 1", listOf("tag1", "tag2")))
-        insertJournal(Journal("Title 2", "Content 2", listOf("tag2", "tag3")))
+            val db = dbHelper.writableDatabase
+            db.delete(DatabaseHelper.TABLE_NAME, null, null)
+            db.close()
+
+            insertJournal(Journal("Title 1", "Content 1", listOf("tag1", "tag2")))
+            insertJournal(Journal("Title 2", "Content 2", listOf("tag2", "tag3")))
     }
 
     private fun setUpSearchView() {
