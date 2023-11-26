@@ -8,6 +8,12 @@
     android:orientation="vertical"
     tools:context=".JournalEntryActivity">
 
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.mcproject.JournalFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"

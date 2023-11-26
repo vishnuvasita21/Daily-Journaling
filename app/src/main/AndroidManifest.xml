@@ -13,10 +13,10 @@
         android:theme="@style/Theme.MC_Project"
         tools:targetApi="31">
         <activity
-            android:name=".JournalEntryActivity"
+            android:name=".ViewJournal"
             android:exported="false" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".JournalEntryActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,12 +25,19 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SignUpActivity"
+            android:exported="true">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
-        <activity
-            android:name=".JournalActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
     </application>
 
 </manifest>

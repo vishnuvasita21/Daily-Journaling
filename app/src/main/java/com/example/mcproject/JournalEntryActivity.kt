@@ -20,6 +20,11 @@ class JournalEntryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journal_entry)
 
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val journalFragment = JournalFragment()
+        fragmentTransaction.add(R.id.searchFragment, journalFragment)
+        fragmentTransaction.commit()
+
         entryEditText = findViewById(R.id.textContent)
         rememberButton = findViewById(R.id.rememberButton)
         titleText = findViewById(R.id.textTitle)
