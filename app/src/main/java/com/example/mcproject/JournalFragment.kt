@@ -40,8 +40,8 @@ class JournalFragment : Fragment(), OnItemClickListener {
         dbHelper = DatabaseHelper(requireContext())
         val currentDate = Calendar.getInstance().time// detect current date here
         val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
-        insertJournal(Journal("Title 1", "Content 1", listOf("tag1", "tag2"), formattedDate))
-        insertJournal(Journal("Title 2", "Content 2", listOf("tag2", "tag3"), formattedDate))
+        insertJournal(Journal("Title 1", "Content 1", listOf("tag1", "tag2"), formattedDate, ""))
+        insertJournal(Journal("Title 2", "Content 2", listOf("tag2", "tag3"), formattedDate,""))
 
         return view
     }
@@ -71,6 +71,7 @@ class JournalFragment : Fragment(), OnItemClickListener {
             put(DatabaseHelper.COLUMN_CONTENT, journal.content)
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
             put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
+            put(DatabaseHelper.COLUMN_LOC, journal.location)
         }
 
         val db = dbHelper.writableDatabase
@@ -100,7 +101,8 @@ class JournalFragment : Fragment(), OnItemClickListener {
                     val title = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITLE))
                     val content = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
                     val dateString = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE))
-                    val journal = Journal(title, content, tags, dateString)
+                    val location = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_LOC))
+                    val journal = Journal(title, content, tags, dateString, location)
                     journalList.add(journal)
                 }
             }

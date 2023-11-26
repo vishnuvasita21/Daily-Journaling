@@ -3,6 +3,7 @@ package com.example.mcproject
 import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,7 +12,10 @@ import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.LocationServices
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -22,14 +26,24 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private lateinit var titleText: EditText
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var wordCountTextView: TextView
+    private var isLocationEnabled: Boolean = false
+    private var location: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journal_entry)
+
+        val locationToggleButton = findViewById<ToggleButton>(R.id.locationToggleButton)
+        locationToggleButton.setOnClickListener {
+            // Change a boolean variable value depending on the toggle state
+            // For example:
+            isLocationEnabled = locationToggleButton.isChecked
+        }
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         val journalFragment = JournalFragment()
         fragmentTransaction.add(R.id.searchFragment, journalFragment)
         fragmentTransaction.commit()
+
 
         var day = 26
         var month = 10
@@ -52,7 +66,12 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
 
             val currentDate = Calendar.getInstance().time// detect current date here
             val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
-            insertJournal(Journal(titleContent, mainContent, listOf("tag1", "tag2"), formattedDate))
+            if(this.isLocationEnabled){
+                askForLocationPermission(); //end
+            }else{
+                this.location = "";
+            }
+            insertJournal(Journal(titleContent, mainContent, listOf("tag1", "tag2"), formattedDate, this.location))
             Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
         }
 
@@ -82,11 +101,29 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             put(DatabaseHelper.COLUMN_CONTENT, journal.content)
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
             put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
+            put(DatabaseHelper.COLUMN_LOC, journal.location)
         }
 
         val db = dbHelper.writableDatabase
         db.insert(DatabaseHelper.TABLE_NAME, null, values)
         db.close()
+    }
+
+    private fun askForLocationPermission() {
+         val locationProvider = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        locationProvider.lastLocation.addOnSuccessListener { location ->
+            this.location = "${location.latitude},${location.longitude}" // Save location in "latitude,longitude" format
+         }
     }
 
     private fun calculateWordCount(text: String): Int {
@@ -112,7 +149,8 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             val content = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
             val tagsString = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TAGS))
             val tags = tagsString.split(",")
-            Journal(title, content, tags, formattedDate)
+            val location = getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LOC))
+            Journal(title, content, tags, formattedDate, location)
         } else {
             null
         }
@@ -123,7 +161,8 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         val selectedDate = Calendar.getInstance()
         selectedDate.set(year, month, dayOfMonth)
         val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(selectedDate.time)
-        val journal = filterByDate(formattedDate) // Filter Journals from db with the formatted date
+        val journal = filterByDate(formattedDate)
+            ?: return // Filter Journals from db with the formatted date
         val intent = Intent(this, ViewJournal::class.java)
         intent.putExtra("journal", journal)
         startActivity(intent)

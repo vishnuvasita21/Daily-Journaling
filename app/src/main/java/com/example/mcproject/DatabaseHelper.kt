@@ -14,6 +14,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COLUMN_CONTENT = "content"
         const val COLUMN_TAGS = "tags"
         const val COLUMN_DATE = "date" // New column for date
+        const val COLUMN_LOC = "location"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -22,7 +23,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 + COLUMN_TITLE + " TEXT,"
                 + COLUMN_CONTENT + " TEXT,"
                 + COLUMN_TAGS + " TEXT,"
-                + COLUMN_DATE + " TEXT" + ")") // Added COLUMN_DATE to the table creation query
+                + COLUMN_DATE + " TEXT,"
+                + COLUMN_LOC + " TEXT" + ")") // Added COLUMN_DATE and COLUMN_LOC to the table creation query
         db.execSQL(CREATE_TABLE)
     }
 

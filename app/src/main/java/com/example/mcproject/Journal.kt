@@ -8,4 +8,5 @@ data class Journal(
     val content: String = "",
     val tags: List<String> = emptyList(),
     val date: String = "",
+    val location: String = "",
     ): Serializable
