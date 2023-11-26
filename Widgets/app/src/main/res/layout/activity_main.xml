@@ -7,38 +7,17 @@
     tools:context=".MainActivity">
 
 
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="264dp"
-        android:layout_height="312dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="264dp"
-        android:layout_marginEnd="92dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-<!--    <Button-->
-<!--        android:id="@+id/locationButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginEnd="209dp"-->
-<!--        android:layout_marginBottom="598dp"-->
-<!--        android:text="Location"-->
-<!--        tools:layout_editor_absoluteX="89dp"-->
-<!--        tools:layout_editor_absoluteY="107dp" />-->
-
     <TextView
         android:id="@+id/TempView"
-        android:layout_width="281dp"
-        android:layout_height="73dp"
+        android:layout_width="368dp"
+        android:layout_height="58dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="82dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="496dp" />
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="511dp"
+        android:textSize="30sp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -51,4 +30,28 @@
         android:layout_marginTop="352dp"
         android:layout_marginEnd="174dp"
         android:layout_marginBottom="331dp" />
+
+    <TextView
+        android:id="@+id/SelectDate"
+        android:layout_width="307dp"
+        android:layout_height="59dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="39dp"
+        android:layout_marginBottom="415dp"
+        android:text="Select Date"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/DatePickerButton"
+        style="?android:spinnerStyle"
+        android:layout_width="322dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="345dp"
+        android:text="01-01-2020"
+        android:textSize="30sp" />
+
 </RelativeLayout>

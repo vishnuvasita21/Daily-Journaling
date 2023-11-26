@@ -1,6 +1,7 @@
 package com.example.widgets
 
 import android.Manifest
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -8,7 +9,8 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
-import android.widget.CalendarView
+import android.widget.Button
+import android.widget.DatePicker
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -24,32 +26,53 @@ import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
+import java.util.Calendar
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
     private lateinit var locationManager: LocationManager
     private val locationListener = MyLocationListener()
+    var day = 0
+    var month = 0
+    var year = 0
+    var savedDay = 0
+    var savedMonth = 0
+    var savedYear = 0
     private lateinit var progressBar : ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         progressBar = findViewById(R.id.progressBar);
+        pickDate()
         getLocation()
-
-//        val locationButton : Button = findViewById(R.id.locationButton)
-//        locationButton.setOnClickListener {
-//            requestLocationUpdates()
+        //val calendarView: CalendarView = findViewById(R.id.calendarView)
+//        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+//            val selectedDate = String.format("%02d-%02d-%d", dayOfMonth, month + 1, year)
+//            Toast.makeText(
+//                this@MainActivity,
+//                "Selected date: $selectedDate",
+//                Toast.LENGTH_SHORT
+//            ).show()
 //        }
-        val calendarView: CalendarView = findViewById(R.id.calendarView)
-        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val selectedDate = String.format("%02d-%02d-%d", dayOfMonth, month + 1, year)
-            Toast.makeText(
-                this@MainActivity,
-                "Selected date: $selectedDate",
-                Toast.LENGTH_SHORT
-            ).show()
+
+    }
+    private  fun getDatePickerCalendar(){
+        val calendar : Calendar = Calendar.getInstance()
+        day = calendar.get(Calendar.DAY_OF_MONTH)
+        month = calendar.get(Calendar.MONTH)
+        year = calendar.get(Calendar.YEAR)
+        val dateButton : Button = findViewById(R.id.DatePickerButton)
+        dateButton.text = String.format("%02d-%02d-%d", savedDay, savedMonth , savedYear)
+
+    }
+
+    private fun pickDate() {
+        val dateButton : Button = findViewById(R.id.DatePickerButton)
+        dateButton.setOnClickListener {
+           DatePickerDialog(this,this,year,month,day).show()
         }
 
     }
+
     private fun getLocation() {
         val locationPermissionRequest =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -177,6 +200,13 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val MIN_TIME_BETWEEN_UPDATES: Long = 1000 // 1 second
         private const val MIN_DISTANCE_CHANGE_FOR_UPDATES: Float = 1.0F // 1 meter
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        savedDay = dayOfMonth
+        savedMonth = month + 1
+        savedYear = year
+        getDatePickerCalendar()
     }
 }
 
