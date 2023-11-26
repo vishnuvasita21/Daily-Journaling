@@ -12,6 +12,9 @@ import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class JournalFragment : Fragment(), OnItemClickListener {
 
@@ -35,9 +38,10 @@ class JournalFragment : Fragment(), OnItemClickListener {
         recyclerView.adapter = adapter
 
         dbHelper = DatabaseHelper(requireContext())
-
-        insertJournal(Journal("Title 1", "Content 1", listOf("tag1", "tag2")))
-        insertJournal(Journal("Title 2", "Content 2", listOf("tag2", "tag3")))
+        val currentDate = Calendar.getInstance().time// detect current date here
+        val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
+        insertJournal(Journal("Title 1", "Content 1", listOf("tag1", "tag2"), formattedDate))
+        insertJournal(Journal("Title 2", "Content 2", listOf("tag2", "tag3"), formattedDate))
 
         return view
     }
@@ -61,11 +65,12 @@ class JournalFragment : Fragment(), OnItemClickListener {
         })
     }
 
-    fun insertJournal(journal: Journal) {
+    private fun insertJournal(journal: Journal) {
         val values = ContentValues().apply {
             put(DatabaseHelper.COLUMN_TITLE, journal.title)
             put(DatabaseHelper.COLUMN_CONTENT, journal.content)
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
+            put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
         }
 
         val db = dbHelper.writableDatabase
@@ -94,7 +99,8 @@ class JournalFragment : Fragment(), OnItemClickListener {
                 if (query in tags) {
                     val title = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITLE))
                     val content = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
-                    val journal = Journal(title, content, tags)
+                    val dateString = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE))
+                    val journal = Journal(title, content, tags, dateString)
                     journalList.add(journal)
                 }
             }

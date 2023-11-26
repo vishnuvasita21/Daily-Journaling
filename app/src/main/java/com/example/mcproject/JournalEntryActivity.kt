@@ -1,16 +1,22 @@
 package com.example.mcproject
 
+import android.app.DatePickerDialog
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
-class JournalEntryActivity : AppCompatActivity() {
+class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var entryEditText: EditText
     private lateinit var rememberButton: Button
     private lateinit var titleText: EditText
@@ -25,6 +31,15 @@ class JournalEntryActivity : AppCompatActivity() {
         fragmentTransaction.add(R.id.searchFragment, journalFragment)
         fragmentTransaction.commit()
 
+        var day = 26
+        var month = 10
+        var year = 2023
+        val dateButton : Button = findViewById(R.id.DatePickerButton)
+        dateButton.setOnClickListener {
+            DatePickerDialog(this,this,year,month,day).show()
+        }
+
+
         entryEditText = findViewById(R.id.textContent)
         rememberButton = findViewById(R.id.rememberButton)
         titleText = findViewById(R.id.textTitle)
@@ -35,15 +50,10 @@ class JournalEntryActivity : AppCompatActivity() {
             val titleContent: String = titleText.text.toString()
             val mainContent: String = entryEditText.text.toString()
 
-            //Everyone can get your data and pass it here: by implementing the following steps
-            //1. Update the Journal.kt class
-            //2. Update the insertJournal method
-            //3. Pass your value from here to the below insertJournal method.
-
-            insertJournal(Journal(titleContent, mainContent, listOf("tag1", "tag2")))
-
+            val currentDate = Calendar.getInstance().time// detect current date here
+            val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
+            insertJournal(Journal(titleContent, mainContent, listOf("tag1", "tag2"), formattedDate))
             Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
-
         }
 
         entryEditText.addTextChangedListener(object : TextWatcher {
@@ -71,6 +81,7 @@ class JournalEntryActivity : AppCompatActivity() {
             put(DatabaseHelper.COLUMN_TITLE, journal.title)
             put(DatabaseHelper.COLUMN_CONTENT, journal.content)
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
+            put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
         }
 
         val db = dbHelper.writableDatabase
@@ -82,5 +93,39 @@ class JournalEntryActivity : AppCompatActivity() {
         // Simple logic to count words (assuming words are separated by spaces)
         val words = text.split("\\s+".toRegex()).toTypedArray()
         return words.size
+    }
+
+    private fun filterByDate(formattedDate: String): Journal? {
+        val db = dbHelper.readableDatabase
+        val selectionArgs = arrayOf(formattedDate)
+        val cursor = db.query(
+            DatabaseHelper.TABLE_NAME,
+            null,
+            "${DatabaseHelper.COLUMN_DATE} = ?",
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        return if (cursor.moveToFirst()) {
+            val title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITLE))
+            val content = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
+            val tagsString = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TAGS))
+            val tags = tagsString.split(",")
+            Journal(title, content, tags, formattedDate)
+        } else {
+            null
+        }
+    }
+
+    // Update the onDateSet method to convert the selected date into the desired format
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        val selectedDate = Calendar.getInstance()
+        selectedDate.set(year, month, dayOfMonth)
+        val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(selectedDate.time)
+        val journal = filterByDate(formattedDate) // Filter Journals from db with the formatted date
+        val intent = Intent(this, ViewJournal::class.java)
+        intent.putExtra("journal", journal)
+        startActivity(intent)
     }
 }

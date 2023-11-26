@@ -6,20 +6,34 @@
     android:layout_height="match_parent"
     android:background="@drawable/journal_signup"
     android:orientation="vertical"
-    tools:context=".JournalEntryActivity">
+    tools:context=".JournalEntryActivity"
+    android:layout_marginBottom="25dp">
 
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.mcproject.JournalFragment"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/DatePickerButton"
+            style="?android:spinnerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp" />
+
+        <fragment
+            android:id="@+id/searchFragment"
+            android:name="com.example.mcproject.JournalFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="51dp"
         android:fontFamily="cursive"
         android:text="Your Personal Journaling Oasis!"
         android:textSize="24sp"
