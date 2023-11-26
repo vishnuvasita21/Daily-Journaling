@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">MC Project</string>
-        <string name="tag_name">Tag name</string>
-        <string name="create_tag">Create Tag</string>
-        <string name="add_tag">Add Tag</string>
+    <string name="tag_name">Tag name</string>
+    <string name="create_tag">Create Tag</string>
+    <string name="add_tag">Add Tag</string>
     <string name="add_new_tag">Add new tag</string>
     <string name="search_for_tags">Search for tags...</string>
     <string name="search_hint">Search Tags</string>

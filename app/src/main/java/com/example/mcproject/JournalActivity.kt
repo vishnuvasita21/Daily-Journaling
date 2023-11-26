@@ -1,15 +1,12 @@
-package com.example.mcproject // Replace with your actual package name
+package com.example.mcproject
 
 import android.app.Activity
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageButton
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import android.widget.ImageButton
 import android.widget.SearchView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -26,9 +23,7 @@ class JournalActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var buttonAddTag: ImageButton
-    private lateinit var searchView: SearchView
 
-    // Activity Result API callback
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val updatedTag = result.data?.getStringExtra(TagDetailActivity.EXTRA_UPDATED_TAG)
@@ -63,15 +58,15 @@ class JournalActivity : AppCompatActivity() {
         }
 
         recyclerView.adapter = adapter
-    dbHelper = DatabaseHelper(this)
+        dbHelper = DatabaseHelper(this)
 
         val db = dbHelper.writableDatabase
         db.delete(DatabaseHelper.TABLE_NAME, null, null)
         db.close()
-        
-        insertJournal(Journal("Title 1", "Content 1", listOf("tag1", "tag2")))
-        insertJournal(Journal("Title 2", "Content 2", listOf("tag2", "tag3")))
-        //db = FirebaseFirestore.getInstance()
+
+        insertJournal(Journal(1, "Title 1", listOf("Content 1"), mutableListOf("tag1", "tag2")))
+        insertJournal(Journal(2, "Title 2", listOf("Content 2"), mutableListOf("tag2", "tag3")))
+
         buttonAddTag.setOnClickListener {
             AddTagDialogFragment().apply {
                 onTagCreated = { tagName ->
@@ -80,26 +75,29 @@ class JournalActivity : AppCompatActivity() {
                 }
             }.show(supportFragmentManager, "AddTagDialog")
         }
+
+        setUpSearchView()
     }
 
     private fun setUpSearchView() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                adapter.filter(query)
+                performSearch(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                adapter.filter(newText)
+                performSearch(newText)
                 return true
             }
         })
     }
-    
-    fun insertJournal(journal: Journal) {
+
+    private fun insertJournal(journal: Journal) {
         val values = ContentValues().apply {
+            put(DatabaseHelper.COLUMN_ID, journal.id)
             put(DatabaseHelper.COLUMN_TITLE, journal.title)
-            put(DatabaseHelper.COLUMN_CONTENT, journal.content)
+            put(DatabaseHelper.COLUMN_CONTENT, journal.content.joinToString(","))
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
         }
 
@@ -108,7 +106,7 @@ class JournalActivity : AppCompatActivity() {
         db.close()
     }
 
-    fun performSearch(query: String?) {
+    private fun performSearch(query: String?) {
         val db = dbHelper.readableDatabase
         val selectionArgs = arrayOf("%$query%")
         val cursor = db.query(
@@ -125,12 +123,12 @@ class JournalActivity : AppCompatActivity() {
         with(cursor) {
             while (moveToNext()) {
                 val tagsString = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_TAGS))
-                val tags = tagsString.split(",")
-                if (query in tags) {
+                val tags = tagsString.split(",").toMutableList()
+                if (tags.any { it.contains(query ?: "", ignoreCase = true) }) {
+                    val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
                     val title = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITLE))
-                    val content = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
-                    val journal = Journal(title, content, tags)
-                    journalList.add(journal)
+                    val content = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT)).split(",")
+                    journalList.add(Journal(id, title, content, tags))
                 }
             }
         }
@@ -138,20 +136,24 @@ class JournalActivity : AppCompatActivity() {
         adapter.updateList(journalList)
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_settings -> {
                 // Handle Settings item click
-                return true
+                true
             }
-            // Add other menu item cases as needed
-            else -> return super.onOptionsItemSelected(item)
+            R.id.action_privacy_settings -> {
+                // Open Privacy Settings screen
+                val intent = Intent(this, PrivacySettingsActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

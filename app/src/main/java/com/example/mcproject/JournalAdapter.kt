@@ -73,4 +73,8 @@ class JournalAdapter(
         }
         notifyDataSetChanged()
     }
+
+    fun updateList(journalList: ArrayList<Journal>) {
+        //Todo: Implement this function
+    }
 }

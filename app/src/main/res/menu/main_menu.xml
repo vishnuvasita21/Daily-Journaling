@@ -11,5 +11,9 @@
         android:showAsAction="never" />
 
     <!-- Add other menu items as needed -->
-
+    <item
+        android:id="@+id/action_privacy_settings"
+        android:title="Privacy Settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"/>
 </menu>

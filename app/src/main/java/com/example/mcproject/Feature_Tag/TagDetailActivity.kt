@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 
 class TagDetailActivity : AppCompatActivity() {
@@ -52,6 +53,14 @@ class TagDetailActivity : AppCompatActivity() {
             resultIntent.putExtra(EXTRA_UPDATED_CONTENT, editTextContent.text.toString())
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
+        }
+
+        val privacyRadioGroup = findViewById<RadioGroup>(R.id.privacyRadioGroup)
+        val selectedPrivacy = when (privacyRadioGroup.checkedRadioButtonId) {
+            R.id.radioPrivate -> "Private"
+            R.id.radioPublic -> "Public"
+            R.id.radioShared -> "Shared"
+            else -> "Private" // Default value
         }
     }
 
