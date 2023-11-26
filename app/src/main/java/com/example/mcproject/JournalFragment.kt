@@ -71,7 +71,6 @@ class JournalFragment : Fragment(), OnItemClickListener {
             put(DatabaseHelper.COLUMN_CONTENT, journal.content)
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
             put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
-            put(DatabaseHelper.COLUMN_LOC, journal.location)
         }
 
         val db = dbHelper.writableDatabase
@@ -101,7 +100,7 @@ class JournalFragment : Fragment(), OnItemClickListener {
                     val title = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITLE))
                     val content = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
                     val dateString = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE))
-                    val location = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_LOC))
+                    val location = ""
                     val journal = Journal(title, content, tags, dateString, location)
                     journalList.add(journal)
                 }
