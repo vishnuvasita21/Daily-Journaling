@@ -1,12 +1,16 @@
 package com.example.mcproject
 
+import android.app.DatePickerDialog
 import android.content.ContentValues
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -14,9 +18,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.LocationServices
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
-class JournalEntryActivity : AppCompatActivity() {
+class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var entryEditText: EditText
     private lateinit var rememberButton: Button
     private lateinit var titleText: EditText
@@ -24,14 +34,33 @@ class JournalEntryActivity : AppCompatActivity() {
     private lateinit var wordCountTextView: TextView
     private lateinit var pickImageButton: Button
     private lateinit var pickedImage: ImageView
+    private var isLocationEnabled: Boolean = false
+    private var location: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journal_entry)
+
+        val locationToggleButton = findViewById<ToggleButton>(R.id.locationToggleButton)
+        locationToggleButton.setOnClickListener {
+            // Change a boolean variable value depending on the toggle state
+            // For example:
+            isLocationEnabled = locationToggleButton.isChecked
+        }
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         val journalFragment = JournalFragment()
         fragmentTransaction.add(R.id.searchFragment, journalFragment)
         fragmentTransaction.commit()
+
+
+        var day = 26
+        var month = 10
+        var year = 2023
+        val dateButton : Button = findViewById(R.id.DatePickerButton)
+        dateButton.setOnClickListener {
+            DatePickerDialog(this,this,year,month,day).show()
+        }
+
 
         entryEditText = findViewById(R.id.textContent)
         rememberButton = findViewById(R.id.rememberButton)
@@ -64,10 +93,15 @@ class JournalEntryActivity : AppCompatActivity() {
             //2. Update the insertJournal method
             //3. Pass your value from here to the below insertJournal method.
 
-            insertJournal(Journal(titleContent, mainContent, imageUrl, listOf("tag1", "tag2")))
-
+            val currentDate = Calendar.getInstance().time// detect current date here
+            val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
+            if(this.isLocationEnabled){
+                askForLocationPermission(); //end
+            }else{
+                this.location = "";
+            }
+            insertJournal(Journal(titleContent, mainContent, imageUrl, listOf("tag1", "tag2"), formattedDate, this.location))
             Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
-
         }
 
         entryEditText.addTextChangedListener(object : TextWatcher {
@@ -101,6 +135,8 @@ class JournalEntryActivity : AppCompatActivity() {
             put(DatabaseHelper.COLUMN_CONTENT, journal.content)
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
             put(DatabaseHelper.COLUMN_IMAGE_URL, journal.imageUrl)
+            put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
+            put(DatabaseHelper.COLUMN_LOC, journal.location)
         }
 
         val db = dbHelper.writableDatabase
@@ -108,9 +144,63 @@ class JournalEntryActivity : AppCompatActivity() {
         db.close()
     }
 
+    private fun askForLocationPermission() {
+        val locationProvider = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        locationProvider.lastLocation.addOnSuccessListener { location ->
+            this.location = "${location.latitude},${location.longitude}" // Save location in "latitude,longitude" format
+         }
+    }
+
     private fun calculateWordCount(text: String): Int {
         // Simple logic to count words (assuming words are separated by spaces)
         val words = text.split("\\s+".toRegex()).toTypedArray()
         return words.size
+    }
+
+    private fun filterByDate(formattedDate: String): Journal? {
+        val db = dbHelper.readableDatabase
+        val selectionArgs = arrayOf(formattedDate)
+        val cursor = db.query(
+            DatabaseHelper.TABLE_NAME,
+            null,
+            "${DatabaseHelper.COLUMN_DATE} = ?",
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        return if (cursor.moveToFirst()) {
+            val title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITLE))
+            val content = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
+            val tagsString = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TAGS))
+            val tags = tagsString.split(",")
+            val location = getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LOC))
+            val imageUrl = getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_IMAGE_URL))
+            Journal(title, content, imageUrl, tags, formattedDate, location)
+        } else {
+            null
+        }
+    }
+
+    // Update the onDateSet method to convert the selected date into the desired format
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        val selectedDate = Calendar.getInstance()
+        selectedDate.set(year, month, dayOfMonth)
+        val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(selectedDate.time)
+        val journal = filterByDate(formattedDate)
+            ?: return // Filter Journals from db with the formatted date
+        val intent = Intent(this, ViewJournal::class.java)
+        intent.putExtra("journal", journal)
+        startActivity(intent)
     }
 }

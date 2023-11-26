@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
         private const val DATABASE_NAME = "JournalDatabase"
         const val TABLE_NAME = "journals"
         const val COLUMN_ID = "id"
@@ -14,6 +14,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COLUMN_CONTENT = "content"
         const val COLUMN_TAGS = "tags"
         const val COLUMN_IMAGE_URL = "imageUrl"
+        const val COLUMN_DATE = "date" // New column for date
+        const val COLUMN_LOC = "location"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -22,7 +24,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 + COLUMN_TITLE + " TEXT,"
                 + COLUMN_CONTENT + " TEXT,"
                 + COLUMN_TAGS + " TEXT,"
-                + COLUMN_IMAGE_URL + " TEXT" + ")")
+                + COLUMN_IMAGE_URL + " TEXT,"
+                + COLUMN_DATE + " TEXT,"
+                + COLUMN_LOC + " TEXT" + ")") // Added COLUMN_DATE and COLUMN_LOC to the table creation query
         db.execSQL(CREATE_TABLE)
     }
 

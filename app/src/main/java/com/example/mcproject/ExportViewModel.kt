@@ -67,7 +67,7 @@ class ExportViewModel : ViewModel() {
                 withContext(Dispatchers.Main) {
                     isErrorOccurred.postValue(true)
                 }
-                Log.e("VMVM", "Error creating ile" + e.toString())
+                Log.e("VMVM", "Error creating ile" + e.printStackTrace())
             }
             pdfDocument.close()
 
