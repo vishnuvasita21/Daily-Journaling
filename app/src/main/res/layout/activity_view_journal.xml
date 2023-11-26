@@ -79,4 +79,10 @@
         android:layout_height="wrap_content"
         android:text="Back" />
 
+    <fragment
+        android:id="@+id/exportFragment"
+        android:name="com.example.mcproject.ExportFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

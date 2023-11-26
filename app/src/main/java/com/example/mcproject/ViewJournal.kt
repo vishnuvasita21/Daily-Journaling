@@ -8,17 +8,20 @@ import android.view.View
 import android.content.Intent
 
 class ViewJournal : AppCompatActivity() {
-    // define variables for the elements in activity_view_journal
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_journal)
 
         // accept data from JournalFragment and accept the Journal object.
-
         val journal = intent.getSerializableExtra("journal") as Journal
 
-        // get objects for entities in activity_view_journal
+        // infalte the export fragment
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val exportFragment = ExportFragment()
+        fragmentTransaction.add(R.id.exportFragment, exportFragment)
+        fragmentTransaction.commit()
 
+        // get objects for entities in activity_view_journal
         val textTitle = findViewById<TextView>(R.id.textTitle)
         val textContent = findViewById<TextView>(R.id.textContent)
         val backButton = findViewById<Button>(R.id.backButton)
