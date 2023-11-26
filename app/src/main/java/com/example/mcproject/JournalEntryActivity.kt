@@ -22,10 +22,59 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private lateinit var titleText: EditText
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var wordCountTextView: TextView
+    private lateinit var tagEditText: EditText
+    private lateinit var moodTextView: TextView  // Add this for the mood TextView
+
+    private fun predictMood(content: String): String {
+        val positiveWords = setOf("happy", "joyful", "excited", "amazing", "good", "great")
+        val negativeWords = setOf("sad", "angry", "upset", "bad", "terrible", "depressed")
+
+        val words = content.split("\\s+".toRegex()).filter { it.isNotBlank() }
+        var score = 0
+        for (word in words) {
+            when {
+                positiveWords.contains(word.toLowerCase(Locale.getDefault())) -> score++
+                negativeWords.contains(word.toLowerCase(Locale.getDefault())) -> score--
+            }
+        }
+
+        return when {
+            score > 0 -> "\uD83D\uDE00" // Smiling face for positive mood
+            score < 0 -> "\uD83D\uDE14" // Sad face for negative mood
+            else -> "\uD83D\uDE10" // Neutral face for neutral mood
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journal_entry)
 
+        moodTextView = findViewById(R.id.moodTextView)
+
+        tagEditText = findViewById(R.id.texttag)
+        tagEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+                // Not needed
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                // Not needed
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+                editable?.let {
+                    val words = it.toString().trim().split("\\s+".toRegex())
+                    if (words.size > 10) {
+                        val trimmedText = words.take(10).joinToString(" ")
+                        tagEditText.setText(trimmedText)
+                        tagEditText.setSelection(trimmedText.length)  // Set the cursor at the end of the text
+                        Toast.makeText(this@JournalEntryActivity, "Only 10 words allowed in tags.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+
+        //
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         val journalFragment = JournalFragment()
         fragmentTransaction.add(R.id.searchFragment, journalFragment)
@@ -49,14 +98,17 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         rememberButton.setOnClickListener {
             val titleContent: String = titleText.text.toString()
             val mainContent: String = entryEditText.text.toString()
+            val tagContent: String = tagEditText.text.toString()
 
+            val tagList: List<String> = tagContent.split("\\s+".toRegex()).filter { it.isNotBlank() }
             val currentDate = Calendar.getInstance().time// detect current date here
             val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
-            insertJournal(Journal(titleContent, mainContent, listOf("tag1", "tag2"), formattedDate))
-            Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
 
-            titleText.text.clear()
-            entryEditText.text.clear()
+            val mood = predictMood(entryEditText.text.toString())  // Call the predictMood function with the content of the journal entry
+            moodTextView.text = getString(R.string.mood_text, mood)
+
+            insertJournal(Journal(titleContent, mainContent, tagList, formattedDate))
+            Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
         }
 
         entryEditText.addTextChangedListener(object : TextWatcher {

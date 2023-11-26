@@ -90,19 +90,66 @@
         android:text="0 words"
         android:textStyle="bold"
         android:layout_gravity="end" />
-
-    <!-- Your existing layout file -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/rememberButton"
-        android:layout_width="130dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:background="@color/beige"
-        android:text="Remember"
-        app:cornerRadius="10dp"
-        app:iconTint="#FFF6F6" />
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tagview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Tag :"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/texttag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/rounded_corner"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="Enter tags (max 10 words)"
+            android:padding="8dp" />
+
+    </LinearLayout>
+    <!-- Your existing layout file -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/rememberButton"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/beige"
+            android:text="Remember"
+            app:cornerRadius="10dp"
+            app:iconTint="#FFF6F6" />
+
+        <TextView
+            android:id="@+id/moodTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="49dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_margin="16dp"
+            android:layout_weight="0"
+            android:fontFamily="sans-serif-black"
+            android:paddingLeft="80dp"
+            android:text="Mood:🙂"
+            android:textAllCaps="true"
+            android:textSize="20sp" />
+
+    </LinearLayout>
 
 
 </LinearLayout>
