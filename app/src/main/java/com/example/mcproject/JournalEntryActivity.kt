@@ -38,7 +38,8 @@ class JournalEntryActivity : AppCompatActivity() {
             insertJournal(Journal(titleContent, mainContent, listOf("tag1", "tag2")))
 
             Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
-
+            titleText.text.clear()
+            entryEditText.text.clear()
         }
 
         entryEditText.addTextChangedListener(object : TextWatcher {

@@ -1,0 +1,9 @@
+<!-- res/drawable/brown_button_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="10dp" /> <!-- Optional: Add rounded corners -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/beige" /> <!-- Set the color for the outline -->
+    <solid android:color="@android:color/transparent" /> <!-- Set transparent background -->
+</shape>
