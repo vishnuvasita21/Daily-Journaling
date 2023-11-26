@@ -8,7 +8,7 @@
     tools:context=".Homepage">
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/dailJournalTextView"
         android:layout_width="185dp"
         android:layout_height="46dp"
         android:layout_marginTop="16dp"
