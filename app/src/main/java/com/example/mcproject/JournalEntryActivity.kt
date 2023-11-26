@@ -134,7 +134,7 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             put(DatabaseHelper.COLUMN_TITLE, journal.title)
             put(DatabaseHelper.COLUMN_CONTENT, journal.content)
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
-            put(DatabaseHelper.COLUMN_IMAGE_URL, journal.imageUrl)
+            //put(DatabaseHelper.COLUMN_IMAGE_URL, journal.imageUrl)
             put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
         }
 
@@ -184,7 +184,8 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             val tagsString = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TAGS))
             val tags = tagsString.split(",")
             val location = ""
-            val imageUrl = getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_IMAGE_URL))
+            //val imageUrl = getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_IMAGE_URL))
+            val imageUrl = "";
             Journal(title, content, imageUrl, tags, formattedDate, location)
         } else {
             null

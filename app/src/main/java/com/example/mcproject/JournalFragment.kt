@@ -80,7 +80,7 @@ class JournalFragment : Fragment(), OnItemClickListener {
             put(DatabaseHelper.COLUMN_TITLE, journal.title)
             put(DatabaseHelper.COLUMN_CONTENT, journal.content)
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
-            put(DatabaseHelper.COLUMN_IMAGE_URL, journal.imageUrl)
+            //put(DatabaseHelper.COLUMN_IMAGE_URL, journal.imageUrl)
             put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
         }
 
@@ -110,7 +110,8 @@ class JournalFragment : Fragment(), OnItemClickListener {
                 if (query in tags) {
                     val title = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITLE))
                     val content = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
-                    val imageUrl = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_IMAGE_URL))
+                    //val imageUrl = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_IMAGE_URL))
+                    val imageUrl = ""
                     val dateString = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE))
                     val location = ""
                     val journal = Journal(title, content, imageUrl, tags, dateString, location)
