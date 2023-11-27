@@ -99,16 +99,25 @@
         android:textStyle="bold"
         android:layout_gravity="end" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
+            android:padding="10dp"
             android:id="@+id/image_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:background="#F85555"
+            android:background="@color/beige"
             android:text="Pick Photo"
-            app:cornerRadius="10dp"/>
+            app:cornerRadius="10dp"
+            app:iconTint="#FFF6F6" />
+
+        <ImageView
+            android:id="@+id/picked_image"
+            android:background="@drawable/rounded_corner"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="400dp" />
 
 
     <LinearLayout
@@ -144,12 +153,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp">
-        <ImageView
-            android:id="@+id/picked_image"
-            android:background="@drawable/rounded_corner"
-            android:layout_margin="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="400dp" />
+
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/rememberButton"
