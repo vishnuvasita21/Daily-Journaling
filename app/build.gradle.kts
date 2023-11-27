@@ -73,6 +73,7 @@ dependencies {
     implementation("com.google.firebase:firebase-database:20.0.3")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -82,6 +83,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
-
+    implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.work:work-runtime-ktx:2.7.1")
 
 }
