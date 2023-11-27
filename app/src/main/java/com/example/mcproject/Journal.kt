@@ -10,5 +10,6 @@ data class Journal(
     val tags: List<String> = emptyList(),
     val date: String = "",
     val location: String = "",
+    val isStarred: Boolean = false
 ): Serializable
 
