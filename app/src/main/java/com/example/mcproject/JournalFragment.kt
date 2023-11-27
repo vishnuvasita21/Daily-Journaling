@@ -3,15 +3,23 @@ package com.example.mcproject
 // JournalFragment.kt
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
+import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -22,6 +30,7 @@ class JournalFragment : Fragment(), OnItemClickListener {
     private lateinit var adapter: JournalAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var exportViewModel: ExportViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,9 +49,10 @@ class JournalFragment : Fragment(), OnItemClickListener {
         dbHelper = DatabaseHelper(requireContext())
         val currentDate = Calendar.getInstance().time// detect current date here
         val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
-        insertJournal(Journal("Title 1", "Content 1", listOf("tag1", "tag2"), formattedDate))
-        insertJournal(Journal("Title 2", "Content 2", listOf("tag2", "tag3"), formattedDate))
+        insertJournal(Journal("Title 1", "Content 1", "", listOf("tag1", "tag2"), formattedDate, ""))
+        insertJournal(Journal("Title 2", "Content 2", "", listOf("tag2", "tag3"), formattedDate,""))
 
+        exportViewModel = ViewModelProvider(this, ExportViewModelFactory())[ExportViewModel::class.java]
         return view
     }
 
@@ -70,6 +80,7 @@ class JournalFragment : Fragment(), OnItemClickListener {
             put(DatabaseHelper.COLUMN_TITLE, journal.title)
             put(DatabaseHelper.COLUMN_CONTENT, journal.content)
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
+            //put(DatabaseHelper.COLUMN_IMAGE_URL, journal.imageUrl)
             put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
         }
 
@@ -99,8 +110,11 @@ class JournalFragment : Fragment(), OnItemClickListener {
                 if (query in tags) {
                     val title = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_TITLE))
                     val content = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CONTENT))
+                    //val imageUrl = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_IMAGE_URL))
+                    val imageUrl = ""
                     val dateString = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE))
-                    val journal = Journal(title, content, tags, dateString)
+                    val location = ""
+                    val journal = Journal(title, content, imageUrl, tags, dateString, location)
                     journalList.add(journal)
                 }
             }

@@ -10,6 +10,11 @@
         android:orderInCategory="100"
         android:showAsAction="never" />
 
+    <item
+        android:id="@+id/export_as_pdf"
+        android:title="Export as PDF"
+        />
+
     <!-- Add other menu items as needed -->
 
 </menu>
