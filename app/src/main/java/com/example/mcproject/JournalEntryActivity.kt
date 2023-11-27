@@ -32,6 +32,29 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private lateinit var titleText: EditText
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var wordCountTextView: TextView
+    private lateinit var tagEditText: EditText
+    private lateinit var moodTextView: TextView  // Add this for the mood TextView
+
+    private fun predictMood(content: String): String {
+        val positiveWords = setOf("happy", "joyful", "excited", "amazing", "good", "great")
+        val negativeWords = setOf("sad", "angry", "upset", "bad", "terrible", "depressed")
+
+        val words = content.split("\\s+".toRegex()).filter { it.isNotBlank() }
+        var score = 0
+        for (word in words) {
+            when {
+                positiveWords.contains(word.toLowerCase(Locale.getDefault())) -> score++
+                negativeWords.contains(word.toLowerCase(Locale.getDefault())) -> score--
+            }
+        }
+
+        return when {
+            score > 0 -> "\uD83D\uDE00" // Smiling face for positive mood
+            score < 0 -> "\uD83D\uDE14" // Sad face for negative mood
+            else -> "\uD83D\uDE10" // Neutral face for neutral mood
+        }
+    }
+
     private lateinit var pickImageButton: Button
     private lateinit var pickedImage: ImageView
     private var isLocationEnabled: Boolean = false
@@ -39,6 +62,33 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journal_entry)
+
+        moodTextView = findViewById(R.id.moodTextView)
+
+        tagEditText = findViewById(R.id.texttag)
+        tagEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+                // Not needed
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                // Not needed
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+                editable?.let {
+                    val words = it.toString().trim().split("\\s+".toRegex())
+                    if (words.size > 10) {
+                        val trimmedText = words.take(10).joinToString(" ")
+                        tagEditText.setText(trimmedText)
+                        tagEditText.setSelection(trimmedText.length)  // Set the cursor at the end of the text
+                        Toast.makeText(this@JournalEntryActivity, "Only 10 words allowed in tags.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+
+        //
 
         val locationToggleButton = findViewById<ToggleButton>(R.id.locationToggleButton)
         locationToggleButton.setOnClickListener {
@@ -51,7 +101,6 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         val journalFragment = JournalFragment()
         fragmentTransaction.add(R.id.searchFragment, journalFragment)
         fragmentTransaction.commit()
-
 
         var day = 26
         var month = 10
@@ -83,28 +132,32 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         if (imageUrl.isEmpty()) {
             pickedImage.visibility = View.GONE
         }
+            rememberButton.setOnClickListener {
 
-        rememberButton.setOnClickListener {
+                //Everyone can get your data and pass it here: by implementing the following steps
+                //1. Update the Journal.kt class
+                //2. Update the insertJournal method
+                //3. Pass your value from here to the below insertJournal method.
+
             val titleContent: String = titleText.text.toString()
             val mainContent: String = entryEditText.text.toString()
-
-            //Everyone can get your data and pass it here: by implementing the following steps
-            //1. Update the Journal.kt class
-            //2. Update the insertJournal method
-            //3. Pass your value from here to the below insertJournal method.
-
+            val tagContent: String = tagEditText.text.toString()
+            val tagList: List<String> = tagContent.split("\\s+".toRegex()).filter { it.isNotBlank() }
             val currentDate = Calendar.getInstance().time// detect current date here
-            val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
-            if(this.isLocationEnabled){
-                askForLocationPermission(); //end
-            }else{
-                this.location = "";
-            }
-            insertJournal(Journal(titleContent, mainContent, imageUrl, listOf("tag1", "tag2"), formattedDate, this.location))
-            Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
+                val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH).format(currentDate)
+                if(this.isLocationEnabled){
+                    askForLocationPermission(); //end
+                }else{
+                    this.location = "";
+                }
+            val mood = predictMood(entryEditText.text.toString())  // Call the predictMood function with the content of the journal entry
+            moodTextView.text = getString(R.string.mood_text, mood)
 
-            titleText.text.clear()
-            entryEditText.text.clear()
+                insertJournal(Journal(titleContent, mainContent, imageUrl, tagList, formattedDate, this.location))
+                Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
+                titleText.text.clear()
+                entryEditText.text.clear()
+
         }
 
         entryEditText.addTextChangedListener(object : TextWatcher {
@@ -160,7 +213,7 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         }
         locationProvider.lastLocation.addOnSuccessListener { location ->
             this.location = "${location.latitude},${location.longitude}" // Save location in "latitude,longitude" format
-         }
+        }
     }
 
     private fun calculateWordCount(text: String): Int {

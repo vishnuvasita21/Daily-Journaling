@@ -25,22 +25,22 @@
         android:theme="@style/Theme.MC_Project"
         android:requestLegacyExternalStorage="true"
         >
-<!--        <activity-->
-<!--            android:name=".ExportActivity"-->
-<!--            android:exported="true"-->
-<!--            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+        <!--        <activity-->
+        <!--            android:name=".ExportActivity"-->
+        <!--            android:exported="true"-->
+        <!--            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-<!--        <activity-->
-<!--            android:name=".JournalActivity"-->
-<!--            android:exported="true"-->
-<!--            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">-->
-<!--            android:name=".ViewJournal"-->
-<!--            android:exported="false" />-->
+        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+        <!--            </intent-filter>-->
+        <!--        </activity>-->
+        <!--        <activity-->
+        <!--            android:name=".JournalActivity"-->
+        <!--            android:exported="true"-->
+        <!--            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">-->
+        <!--            android:name=".ViewJournal"-->
+        <!--            android:exported="false" />-->
         <activity
             android:name=".Homepage"
             android:exported="true" >
