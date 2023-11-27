@@ -14,6 +14,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COLUMN_CONTENT = "content"
         const val COLUMN_TAGS = "tags"
         const val COLUMN_IMAGE_URL = "imageUrl"
+        const val COLUMN_IS_STARRED = "is_starred"
         const val COLUMN_DATE = "date" // New column for date
         const val COLUMN_LOC = "location"
     }
@@ -26,9 +27,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 + COLUMN_TAGS + " TEXT,"
                 + COLUMN_IMAGE_URL + " TEXT,"
                 + COLUMN_DATE + " TEXT,"
-                + COLUMN_LOC + " TEXT" + ")") // Added COLUMN_DATE and COLUMN_LOC to the table creation query
+                + COLUMN_LOC + " TEXT,"
+                + COLUMN_IS_STARRED + " INTEGER"+")")
         db.execSQL(CREATE_TABLE)
     }
+
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME)
