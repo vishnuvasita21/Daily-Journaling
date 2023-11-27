@@ -1,19 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/test5"
     android:orientation="vertical"
-    tools:context=".JournalEntryActivity">
+    tools:context=".JournalEntryActivity"
+    android:layout_marginBottom="25dp">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".JournalEntryActivity"
+        android:layout_marginBottom="25dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/DatePickerButton"
+                style="?android:spinnerStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30sp" />
+
+            <fragment
+                android:id="@+id/searchFragment"
+                android:name="com.example.mcproject.JournalFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="51dp"
         android:fontFamily="cursive"
         android:text="Your Personal Journaling Oasis!"
         android:textSize="24sp"
@@ -71,18 +99,93 @@
         android:textStyle="bold"
         android:layout_gravity="end" />
 
-    <!-- Your existing layout file -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/rememberButton"
-        android:layout_width="130dp"
+        <Button
+            android:id="@+id/image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:background="#F85555"
+            android:text="Pick Photo"
+            app:cornerRadius="10dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:background="@color/beige"
-        android:text="Remember"
-        app:cornerRadius="10dp"
-        app:iconTint="#FFF6F6" />
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tagview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Tag :"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textSize="20sp" />
 
+        <EditText
+            android:id="@+id/texttag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/rounded_corner"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="Enter tags (max 10 words)"
+            android:padding="8dp" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+        <ImageView
+            android:id="@+id/picked_image"
+            android:background="@drawable/rounded_corner"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="400dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/rememberButton"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/beige"
+            android:text="Remember"
+            app:cornerRadius="10dp"
+            app:iconTint="#FFF6F6" />
+
+        <ToggleButton
+            android:id="@+id/locationToggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:layout_gravity="end"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="24dp"
+            android:checked="false" />
+
+        <TextView
+            android:id="@+id/moodTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="49dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_margin="16dp"
+            android:layout_weight="0"
+            android:fontFamily="sans-serif-black"
+            android:text="Mood:🙂"
+            android:textAllCaps="true"
+            android:textSize="10sp" />
+
+    </LinearLayout>
 </LinearLayout>
+</ScrollView>
