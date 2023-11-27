@@ -14,6 +14,7 @@ import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
@@ -22,6 +23,14 @@ import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -58,7 +67,9 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private lateinit var pickImageButton: Button
     private lateinit var pickedImage: ImageView
     private var isLocationEnabled: Boolean = false
+    private var isWeatherEnabled: Boolean = false
     private var location: String = ""
+    private var weatherTemp : String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journal_entry)
@@ -95,6 +106,7 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             // Change a boolean variable value depending on the toggle state
             // For example:
             isLocationEnabled = locationToggleButton.isChecked
+            isWeatherEnabled = locationToggleButton.isChecked
         }
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -150,6 +162,14 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
                 }else{
                     this.location = "";
                 }
+
+                if(this.isWeatherEnabled){
+                    askForWeather()
+                }
+                else{
+                    this.weatherTemp = ""
+
+                }
             val mood = predictMood(entryEditText.text.toString())  // Call the predictMood function with the content of the journal entry
             moodTextView.text = getString(R.string.mood_text, mood)
 
@@ -183,6 +203,34 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         // If needed, you can clear the table in the database on each activity creation
         dbHelper.writableDatabase.delete(DatabaseHelper.TABLE_NAME, null, null)
     }
+
+    private fun askForWeather() {
+      //  val progressBar: ProgressBar = findViewById(R.id.progressBar)
+        val client  =  OkHttpClient()
+        val url = "https://api.weatherapi.com/v1/current.json?key=542d8232b6964783abf194227232411&q=${this.location}"
+        GlobalScope.launch(Dispatchers.IO) {
+            val request = Request.Builder()
+                .url(url)
+                .build();
+            try {
+                val response: Response = client.newCall(request).execute()
+                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                val responseBody = response.body?.string()
+                val jsonResponse = JSONObject(responseBody)
+                val currentObject = jsonResponse.getJSONObject("current")
+                val tempCelsius = currentObject.getDouble("temp_c")
+                runOnUiThread {
+                    weatherTemp = "$tempCelsius"
+                }
+
+            }
+            catch (e : IOException){
+                e.printStackTrace()
+            }
+        }
+
+    }
+
 
     private fun insertJournal(journal: Journal) {
         Log.e("iii", journal.imageUrl)
