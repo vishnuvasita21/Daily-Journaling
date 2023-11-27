@@ -242,6 +242,11 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
                 val tempCelsius = currentObject.getDouble("temp_c")
                 runOnUiThread {
                     weatherTemp = "$tempCelsius"
+                    Toast.makeText(
+                        this@JournalEntryActivity,
+                        "Location: $location, Temperature: $tempCelsius",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             }
