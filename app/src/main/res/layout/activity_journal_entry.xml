@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,9 +10,7 @@
     tools:context=".JournalEntryActivity"
     android:layout_marginBottom="25dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -100,6 +99,11 @@
             android:textStyle="bold"
             android:layout_gravity="end" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="118dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
         <Button
             android:id="@+id/image_button"
             android:layout_width="wrap_content"
@@ -111,6 +115,19 @@
             android:text="Pick Photo"
             app:cornerRadius="10dp"/>
 
+        <Button
+            android:id="@+id/privacyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="76dp"
+            android:layout_marginTop="24dp"
+            android:background="#F85555"
+            android:text="Privacy Settings"
+            app:cornerRadius="10dp" />
+    </LinearLayout>
+
+
         <ImageView
             android:id="@+id/picked_image"
             android:background="@drawable/rounded_corner"
@@ -120,9 +137,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_height="118dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/rememberButton"
@@ -139,12 +156,15 @@
                 android:id="@+id/locationToggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location"
                 android:layout_gravity="end"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
-                android:checked="false" />
+                android:layout_marginEnd="16dp"
+                android:checked="false"
+                android:text="Location" />
+
+
+
         </LinearLayout>
 
 

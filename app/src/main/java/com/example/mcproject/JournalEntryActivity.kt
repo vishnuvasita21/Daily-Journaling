@@ -2,8 +2,10 @@ package com.example.mcproject
 
 import android.app.DatePickerDialog
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -61,6 +63,14 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             DatePickerDialog(this,this,year,month,day).show()
         }
 
+        val preferences = getSharedPreferences("PrivacySettings", Context.MODE_PRIVATE)
+        val isCameraEnabled = preferences.getBoolean("Camera", false)
+
+        val privacySettings:Button = findViewById(R.id.privacyButton)
+        privacySettings.setOnClickListener{
+            val intent = Intent(this, PrivacySettingsActivity::class.java)
+            startActivity(intent)
+        }
 
         entryEditText = findViewById(R.id.textContent)
         rememberButton = findViewById(R.id.rememberButton)
@@ -69,6 +79,9 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         wordCountTextView = findViewById(R.id.textView5)
         pickImageButton = findViewById(R.id.image_button)
         pickedImage = findViewById(R.id.picked_image)
+
+        pickImageButton.isEnabled = isCameraEnabled
+        pickImageButton.setBackgroundColor(if (isCameraEnabled) Color.BLUE else Color.GRAY)
 
         var imageUrl = ""
 
@@ -205,5 +218,16 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         val intent = Intent(this, ViewJournal::class.java)
         intent.putExtra("journal", journal)
         startActivity(intent)
+    }
+    override fun onResume() {
+
+        super.onResume()
+
+        pickImageButton = findViewById(R.id.image_button)
+        val preferences = getSharedPreferences("PrivacySettings", Context.MODE_PRIVATE)
+        val isCameraEnabled = preferences.getBoolean("Camera", false)
+
+        pickImageButton.isEnabled = isCameraEnabled
+        pickImageButton.setBackgroundColor(if (isCameraEnabled) Color.BLUE else Color.GRAY)
     }
 }
