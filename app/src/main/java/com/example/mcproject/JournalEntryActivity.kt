@@ -33,7 +33,9 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var wordCountTextView: TextView
     private lateinit var tagEditText: EditText
-    private lateinit var moodTextView: TextView  // Add this for the mood TextView
+    private lateinit var moodTextView: TextView
+    private lateinit var starIcon: ImageView
+    private var isJournalStarred = false// Add this for the mood TextView
 
     private fun predictMood(content: String): String {
         val positiveWords = setOf("happy", "joyful", "excited", "amazing", "good", "great")
@@ -64,7 +66,7 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         setContentView(R.layout.activity_journal_entry)
 
         moodTextView = findViewById(R.id.moodTextView)
-
+        starIcon = findViewById(R.id.starIcon)
         tagEditText = findViewById(R.id.texttag)
         tagEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
@@ -132,7 +134,12 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
         if (imageUrl.isEmpty()) {
             pickedImage.visibility = View.GONE
         }
-            rememberButton.setOnClickListener {
+        starIcon.setOnClickListener {
+            isJournalStarred = !isJournalStarred
+            updateStarIcon()
+        }
+
+        rememberButton.setOnClickListener {
 
                 //Everyone can get your data and pass it here: by implementing the following steps
                 //1. Update the Journal.kt class
@@ -150,6 +157,8 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
                 }else{
                     this.location = "";
                 }
+            isJournalStarred = false
+            updateStarIcon()
             val mood = predictMood(entryEditText.text.toString())  // Call the predictMood function with the content of the journal entry
             moodTextView.text = getString(R.string.mood_text, mood)
 
@@ -192,11 +201,15 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             put(DatabaseHelper.COLUMN_TAGS, journal.tags.joinToString(","))
             //put(DatabaseHelper.COLUMN_IMAGE_URL, journal.imageUrl)
             put(DatabaseHelper.COLUMN_DATE, journal.date) // Assuming date is a String in the format you want
+            put(DatabaseHelper.COLUMN_IS_STARRED, if (journal.isStarred) 1 else 0)
         }
 
         val db = dbHelper.writableDatabase
         db.insert(DatabaseHelper.TABLE_NAME, null, values)
         db.close()
+    }
+    private fun updateStarIcon() {
+        starIcon.setImageResource(if (isJournalStarred) R.drawable.ic_star_filled else R.drawable.ic_star_border)
     }
 
     private fun askForLocationPermission() {

@@ -74,6 +74,13 @@
             android:inputType="text"
             android:padding="8dp"
             android:textAlignment="center" />
+        <ImageView
+            android:id="@+id/starIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_star_border"/>
 
     </LinearLayout>
 
