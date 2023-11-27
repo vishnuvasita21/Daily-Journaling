@@ -180,9 +180,9 @@ class JournalEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
                 else{
                     this.weatherTemp = ""
                 }
-            val mood = predictMood(entryEditText.text.toString())  // Call the predictMood function with the content of the journal entry
-            moodTextView.text = getString(R.string.mood_text, mood)
 
+                val mood = predictMood(entryEditText.text.toString())  // Call the predictMood function with the content of the journal entry
+                moodTextView.text = getString(R.string.mood_text, mood)
                 insertJournal(Journal(titleContent, mainContent, imageUrl, tagList, formattedDate, this.location))
                 Toast.makeText(this, "Entry Stored successfully!", Toast.LENGTH_SHORT).show()
                 titleText.text.clear()
